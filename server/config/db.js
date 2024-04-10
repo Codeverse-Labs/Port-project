@@ -4,10 +4,10 @@ const mysql = require('mysql');
  const connectDB = async() => {
      try {
          await mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: '',
-            database: 'billmanagementsystem'
+            host: process.env.host,
+            user: process.env.user,
+            password: process.env.password,
+            database: process.env.database
          })
      } catch (error) {
          console.log('Database connection FAIL');
