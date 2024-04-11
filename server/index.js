@@ -24,13 +24,13 @@ app.use(express.json());
 const cors = require("cors");
 app.use(cors());
 
-
-
 const userRoutes = require('./routes/userRoutes');
 const billRoutes = require('./routes/billRoutes');
+
 //routes
 app.use('/users', userRoutes);
 app.use('/bills', billRoutes);
+
 //set port
 const PORT = process.env.PORT
 app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
