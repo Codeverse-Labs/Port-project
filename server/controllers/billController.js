@@ -2,11 +2,6 @@ const xlsx = require('xlsx');
 const mysql = require('mysql');
 const db = require('../config/query');
 
-const { format } = require('date-fns');
-
-// Get today's date in 'YYYY-MM-DD' format
-const today_date = format(new Date(), 'yyyy-MM-dd');
-
 // Function to handle bill upload
 exports.uploadBill = (req, res) => {
   // Check if file is provided
@@ -80,7 +75,7 @@ exports.uploadBill = (req, res) => {
     row.Total,
     currentMonth,
     currentYear
-  ]); // Modify this according to your column names
+  ]); 
 
   db.getConnection((err, connection) => {
     if (err) {
@@ -103,7 +98,8 @@ exports.uploadBill = (req, res) => {
 
 
 exports.getMonthlyBills = (req, res) => {
-  const { month, year } = req.query; // Assuming you're passing month and year as query parameters
+  const { month, year } = req.query; 
+  const dateString = `${year}-${month.toString().padStart(2, '0')}-01`;
 
   const sql = `
   SELECT u.*, um.*, b.*
@@ -115,7 +111,7 @@ exports.getMonthlyBills = (req, res) => {
   AND b.Month = ? AND b.Year = ?;
   `;
 
-  db.query(sql, [today_date,today_date,month, year], (err, results) => {
+  db.query(sql, [dateString,dateString,month, year], (err, results) => {
     if (err) {
       console.error('Error fetching bill data:', err);
       return res.status(500).json({ error: 'Database error' + err });
@@ -126,7 +122,8 @@ exports.getMonthlyBills = (req, res) => {
 };
 
 exports.getDptBills = (req, res) => {
-  const { month, year, Dpt } = req.query; // Assuming you're passing month and year as query parameters
+  const { month, year, Dpt } = req.query; 
+  const dateString = `${year}-${month.toString().padStart(2, '0')}-01`;
 
   const sql = `
   SELECT u.*, um.*, b.*
@@ -138,7 +135,7 @@ exports.getDptBills = (req, res) => {
   AND b.Month = ? AND b.Year = ? AND u.Dpt = ?;
   `;
 
-  db.query(sql, [today_date,today_date,month, year, Dpt], (err, results) => {
+  db.query(sql, [dateString,dateString,month, year, Dpt], (err, results) => {
     if (err) {
       console.error('Error fetching bill data:', err);
       return res.status(500).json({ error: 'Database error' });
