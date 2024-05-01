@@ -26,10 +26,12 @@ app.use(cors());
 
 const userRoutes = require('./routes/userRoutes');
 const billRoutes = require('./routes/billRoutes');
+const dptRoutes  = require('./routes/dptRoutes');
 
 //routes
 app.use('/users', userRoutes);
 app.use('/bills', billRoutes);
+app.use('/dpt', dptRoutes);
 
 //set port
 const PORT = process.env.PORT
