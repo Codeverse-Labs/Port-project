@@ -1,0 +1,171 @@
+{
+	"info": {
+		"_postman_id": "dde5ea79-d711-46b1-98ac-efa1799a5af3",
+		"name": "BillManagement",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7986605",
+		"_collection_link": "https://cloudy-resonance-334376.postman.co/workspace/PortPrj~ca654e03-2dd7-4199-bcd3-964b9a3a33cb/collection/7986605-dde5ea79-d711-46b1-98ac-efa1799a5af3?action=share&source=collection_link&creator=7986605"
+	},
+	"item": [
+		{
+			"name": "Bills",
+			"item": [
+				{
+					"name": "save exel data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "billFile",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/bills/upload",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"bills",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get bill data according to date",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "billFile",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/bills?month=3&year=2024",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"bills"
+							],
+							"query": [
+								{
+									"key": "month",
+									"value": "3"
+								},
+								{
+									"key": "year",
+									"value": "2024"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get bill data according to date & dpt",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "billFile",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/bills/dpt?month=4&year=2024&Dpt=Security",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"bills",
+								"dpt"
+							],
+							"query": [
+								{
+									"key": "month",
+									"value": "4"
+								},
+								{
+									"key": "year",
+									"value": "2024"
+								},
+								{
+									"key": "Dpt",
+									"value": "Security"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": []
+		},
+		{
+			"name": "all users",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "billFile",
+							"type": "file",
+							"src": "/C:/Users/HP/Downloads/January 2023/9214973 .xlsx"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

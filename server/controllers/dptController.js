@@ -1,8 +1,8 @@
 const db = require('../config/query');
 
 exports.create = (req, res) => {  
-  const sql = 'INSERT INTO users (Name, Position, Dpt) VALUES (?, ?, ?)';
-  db.query(sql, [req.body.name, req.body.position, req.body.department], (err, results) => {
+  const sql = 'INSERT INTO departments (Name, ShortName) VALUES (?, ?)';
+  db.query(sql, [req.body.name, req.body.shortName], (err, results) => {
     if (err) {
       return res.status(err.code).json({ error: err.message });
     }else{
@@ -12,7 +12,7 @@ exports.create = (req, res) => {
 };
 
 exports.getAll = (req, res) => {
-  db.query('SELECT * FROM users', (err, results) => {
+  db.query('SELECT * FROM departments', (err, results) => {
     if (err) {
       return res.status(err.code).json({ error: err.message });
     }else{
@@ -22,7 +22,7 @@ exports.getAll = (req, res) => {
 };
 
 exports.getById = (req, res) => {
-  const sql = 'SELECT * FROM users WHERE Id = ?';
+  const sql = 'SELECT * FROM departments WHERE Id = ?';
   db.query(sql, [req.params.id], (err, results) => {
     if (err) {
       return res.status(err.code).json({ error: err.message });
@@ -32,8 +32,8 @@ exports.getById = (req, res) => {
 };
 
 exports.updateById = (req, res) => {
-  const sql = 'UPDATE users SET Name = ?, Position = ?, Dpt = ? WHERE Id = ?';
-  db.query(sql, [req.body.name, req.body.position, req.body.department, req.params.id], (err, results) => {
+  const sql = 'UPDATE departments SET Name = ?, ShortName = ? WHERE Id = ?';
+  db.query(sql, [req.body.name, req.body.shortName, req.params.id], (err, results) => {
     if (err) {
       return res.status(err.code).json({ error: err.message });
     }
@@ -44,7 +44,7 @@ exports.updateById = (req, res) => {
 };
 
 exports.deleteById = (req, res) => {
-  const sql = 'DELETE FROM users WHERE Id = ?';
+  const sql = 'DELETE FROM departments WHERE Id = ?';
   db.query(sql, [ req.params.id], (err, results) => {
     if (err) {
       return res.status(err.code).json({ error: err.message });
