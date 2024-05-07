@@ -107,9 +107,9 @@ function UsersPage() {
     const deleteUserRes = await deleteUser(id);
 
     if (deleteUserRes.error) {
-      toast.error('Department delete failed');
+      toast.error('User delete failed');
     } else {
-      toast.success('Department deleted successfully');
+      toast.success('User deleted successfully');
     }
   };
   return (
