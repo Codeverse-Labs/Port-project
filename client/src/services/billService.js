@@ -21,7 +21,21 @@ export const billApi = createApi({
         }),
         transformResponse: (response) => response,
       }),
+
+    uploadBills: builder.mutation ({
+      query: (selectedFile) => {
+        var bodyFormData = new FormData();
+        bodyFormData.append('billFile', selectedFile);
+        console.log({ bodyFormData, selectedFile });
+        return {
+          url: '/bills/upload',
+          method: 'POST',
+          body:  bodyFormData ,
+          formData: true
+        };
+      }
+      }),
   }),
 });
 
-export const { useGetMonthlyBillsQuery, useGetDepartmentBillsQuery } = billApi;
+export const { useGetMonthlyBillsQuery, useGetDepartmentBillsQuery, useUploadBillsMutation } = billApi;

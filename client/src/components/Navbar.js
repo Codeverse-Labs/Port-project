@@ -15,8 +15,8 @@ function Navbar() {
         <div className="mx-5">
           <div className="grid grid-cols-2 gap-5">
             <button className="btn">
-            <p className="text-xl text-gray-700 hover:text-gray-500">Internet Bill</p></button>
-            <button className="btn "><p className="text-xl text-gray-700 hover:text-gray-500">Normal Bill</p></button>
+            <p className="text-xl text-gray-700 hover:text-gray-500">Telecom Bill</p></button>
+            <button className="btn "><p className="text-xl text-gray-700 hover:text-gray-500">Mobitel Bill</p></button>
           </div>
         </div>
       </div>
