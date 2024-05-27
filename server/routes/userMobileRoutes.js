@@ -9,7 +9,10 @@ router.post('/', userMobileController.create);
 router.get('/', userMobileController.getAll);
 
 // get all vecant mobiles 
-router.get('/vecant/', userMobileController.getVecantMobiles);
+router.get('/vecant/mobiles/', userMobileController.getVecantMobiles);
+
+// get all vecant mobiles 
+router.get('/vecant/users/', userMobileController.getVecantUsers);
 
 // get all vecant mobiles 
 router.get('/mobile/:MobileNumber', userMobileController.getByMobiles);
