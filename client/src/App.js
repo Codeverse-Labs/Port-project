@@ -6,6 +6,7 @@ import LoginPage from './pages/auth/LoginPage';
 import DSummaryPage from './pages/DivisionSummary/DSummaryPage';
 import DepartmentsPage from './pages/Departments/DepartmentsPage';
 import UsersPage from './pages/Users/UsersPage';
+import UserMobilePage from './pages/UserMobile/UserMobilePage';
 
 function App() {
   return (
@@ -15,11 +16,12 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<Navigate to={'/login'} replace />} />
         <Route path="/dashboard" element={<DashboardPage />} />
-        <Route exact path="/master-bill" element={<FormPage />} />
-        <Route path="/master-bill-sheet" element={<MasterBillPage />} />
-        <Route path="/d-summary" element={<DSummaryPage />} />
-        <Route path="/departments" element={<DepartmentsPage />} />
-        <Route exact path="/users" element={<UsersPage />} />
+        <Route exact path="/mobitel/master-bill" element={<FormPage />} />
+        <Route path="/mobitel/master-bill-sheet" element={<MasterBillPage />} />
+        <Route path="/mobitel/d-summary" element={<DSummaryPage />} />
+        <Route path="/mobitel/divisions" element={<DepartmentsPage />} />
+        <Route exact path="/mobitel/users" element={<UsersPage />} />
+        <Route exact path="/mobitel/usermobile" element={<UserMobilePage />} />
       </Routes>
     </BrowserRouter>
   );

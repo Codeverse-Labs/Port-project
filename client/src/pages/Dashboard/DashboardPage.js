@@ -10,7 +10,6 @@ function DashboardPage() {
     <>
       <Navbar />
       <div className=" flex flex-row">
-        <Sidebar />
       </div>
     </>
   );
