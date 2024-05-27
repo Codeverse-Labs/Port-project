@@ -8,6 +8,15 @@ router.post('/', userMobileController.create);
 // get all 
 router.get('/', userMobileController.getAll);
 
+// get all vecant mobiles 
+router.get('/vecant/mobiles/', userMobileController.getVecantMobiles);
+
+// get all vecant mobiles 
+router.get('/vecant/users/', userMobileController.getVecantUsers);
+
+// get all vecant mobiles 
+router.get('/mobile/:MobileNumber', userMobileController.getByMobiles);
+
 // update
 router.put('/:id', userMobileController.updateById);
 
