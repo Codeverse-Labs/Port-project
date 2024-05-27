@@ -12,12 +12,22 @@ exports.create = (req, res) => {
 };
 
 exports.getAll = (req, res) => {
-  db.query('SELECT * FROM user_mobile', (err, results) => {
+  db.query('SELECT * FROM user_mobile JOIN users WHERE user_mobile.UserId = users.Id', (err, results) => {
     if (err) {
       return res.status(err.code).json({ error: err.message });
     }else{
       res.status(200).json(results);
     }
+  });
+};
+
+exports.getByMobiles = (req, res) => {
+  const sql ='SELECT * FROM user_mobileJOIN users WHERE user_mobile.UserId = users.Id AND MobileNumber = ?';
+  db.query(sql, [req.params.MobileNumber], (err, results) => {
+    if (err) {
+      return res.status(err.code).json({ error: err.message });
+    }
+    res.status(200).json(results);
   });
 };
 
@@ -34,7 +44,17 @@ exports.updateById = (req, res) => {
 };
 
 exports.getVecantMobiles = (req, res) => {
-  db.query('SELECT * FROM user_mobile WHERE GivenFrom = NULL OR GivenUntill != NULL', (err, results) => {
+  db.query('SELECT * FROM user_mobile WHERE GivenFrom IS NULL OR GivenUntill IS NOT NULL', (err, results) => {
+    if (err) {
+      return res.status(err.code).json({ error: err.message });
+    }else{
+      res.status(200).json(results);
+    }
+  });
+};
+
+exports.getVecantUsers = (req, res) => {
+  db.query('SELECT users.* FROM users WHERE NOT EXISTS (SELECT 1 FROM user_mobile WHERE user_mobile.UserId = users.Id);', (err, results) => {
     if (err) {
       return res.status(err.code).json({ error: err.message });
     }else{
