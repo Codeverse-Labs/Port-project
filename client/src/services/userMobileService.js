@@ -17,6 +17,23 @@ export const userMobileApi = createApi({
         transformResponse: (response) => response,
       }),
 
+      getAllVecantUserMobile: builder.query({
+        query: () => ({
+          url: `/usermobile/vecant/mobiles/`,
+          method: 'GET',
+        }),
+        providesTags: ['getRequest'],
+        transformResponse: (response) => response,
+      }),
+      getAllVecantUsers: builder.query({
+        query: () => ({
+          url: `/usermobile/vecant/users/`,
+          method: 'GET',
+        }),
+        providesTags: ['getRequest'],
+        transformResponse: (response) => response,
+      }),
+
       newUserMobile: builder.mutation({
         query: ({ MobileNumber }) => {
           return {
@@ -51,4 +68,4 @@ export const userMobileApi = createApi({
   }),
 });
 
-export const { useGetAllUserMobileQuery, useNewUserMobileMutation, useDeleteUserMobileMutation, useUpdateUserMobileMutation } = userMobileApi;
+export const { useGetAllUserMobileQuery, useNewUserMobileMutation, useDeleteUserMobileMutation, useUpdateUserMobileMutation, useGetAllVecantUserMobileQuery, useGetAllVecantUsersQuery } = userMobileApi;

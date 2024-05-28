@@ -7,6 +7,7 @@ import DSummaryPage from './pages/DivisionSummary/DSummaryPage';
 import DepartmentsPage from './pages/Departments/DepartmentsPage';
 import UsersPage from './pages/Users/UsersPage';
 import UserMobilePage from './pages/UserMobile/UserMobilePage';
+import UserMobileVecantPage from './pages/UserMobileVecant/UserMobileVecantPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/mobitel/divisions" element={<DepartmentsPage />} />
         <Route exact path="/mobitel/users" element={<UsersPage />} />
         <Route exact path="/mobitel/usermobile" element={<UserMobilePage />} />
+        <Route exact path="/mobitel/usermobile/vecant" element={<UserMobileVecantPage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,3 +1,6 @@
+
+
+
 import { React, useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import Navbar from '../../components/Navbar';
@@ -13,8 +16,10 @@ import DatePicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import { useGetAllDepartmentsQuery } from '../../services/departmentService';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
 function UserMobilePage() {
+    const navigate = useNavigate();
   const { data: userMobileData, isLoading: userLoading } =
     useGetAllUserMobileQuery();
   const { data: departmentData, isLoading: departmentLoading } =
@@ -25,13 +30,14 @@ function UserMobilePage() {
   const [deleteUserMobile] = useDeleteUserMobileMutation();
 
   const [isUpdate, setIsUpdate] = useState(false);
+  const [isAssign, setIsAssign] = useState(false);
 
   const [formData, setFormData] = useState({
     mobileId: '',
     number: '',
     userId: '',
-    GivenFrom: '',
-    GivenUntill: '',
+    GivenFrom: new Date(),
+    GivenUntill: new Date(),
   });
 
   const handleGivenFromDateChange = (date) => {
@@ -48,7 +54,18 @@ function UserMobilePage() {
     });
   };
 
-  const handleUserMobileEdit = (id, MobileNumber, GivenFrom, GivenUntill) => {
+  function convertToISO(dateString) {
+    // Parse the date string into a Date object
+    const date = new Date(dateString);
+  
+    // Get the ISO string from the Date object
+    const isoString = date.toISOString();
+  
+    return isoString;
+  }
+  
+
+  const handleUserMobileEdit = (id, user, MobileNumber, GivenFrom, GivenUntill) => {
     setIsUpdate(true);
     window.scrollTo({
       top: 0,
@@ -57,9 +74,10 @@ function UserMobilePage() {
 
     setFormData({
       mobileId: id,
+      userId: user,
       number: MobileNumber,
-      GivenFrom: GivenFrom === '0000-00-00' ? '' : GivenFrom,
-      GivenUntill: GivenUntill === '0000-00-00' ? '' : GivenUntill,
+      GivenFrom: GivenFrom,
+      GivenUntill: GivenUntill === null ? new Date() : GivenUntill,
     });
   };
 
@@ -79,10 +97,12 @@ function UserMobilePage() {
 
     const userMobileUpdateData = {
       id: formData.mobileId,
-      UserId: 160,
+      UserId: formData.userId,
       GivenFrom: formData.GivenFrom,
-      GivenUntill: formData.GivenUntill,
+      GivenUntill: convertToISO(formData.GivenUntill),
     };
+
+    console.log(formData)
 
     if (isUpdate === true) {
       const UserMobileUpdateRes = await updateUserMobile(userMobileUpdateData);
@@ -91,8 +111,8 @@ function UserMobilePage() {
         mobileId: '',
         number: '',
         userId: '',
-        GivenFrom: '',
-        GivenUntill: '',
+        GivenFrom: new Date(),
+        GivenUntill: new Date(),
       });
       setIsUpdate(false);
 
@@ -138,12 +158,22 @@ function UserMobilePage() {
           <Sidebar />
         </div>
         <div className="flex-grow justify-center justify-items-center z-10">
-          <div className="">
-            <form class="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4  mt-10 mx-20">
+
+        <div className="mt-4 flex justify-center justify-items-center">
+            <button
+              class="mt-10 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+              type="button"
+              onClick={() => navigate('/mobitel/usermobile/vecant')}
+            >
+              Assign Vecant Numbers
+            </button>
+          </div>
+          <div className=" mt-4">
+            <form class="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4  mt-10 mx-20 border border-gray-600">
               <div class="flex -mx-3 mb-2 justify-center justify-items-center">
                 {
                   <div
-                    class={`${isUpdate ? 'w-1/4' : 'w-1/3'} px-3 mb-6 md:mb-0`}
+                    class={`${isUpdate ? 'w-1/3' : 'w-1/3'} px-3 mb-6 md:mb-0`}
                   >
                     <label
                       class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -161,55 +191,15 @@ function UserMobilePage() {
                         type="text"
                         required
                         onChange={handleChange}
+                        disabled={isUpdate ? true: false}
                       />
                     </div>
                   </div>
                 }
 
-                {isUpdate && (
-                  <div class="w-full md:w-1/4 px-3 mb-6 md:mb-0">
-                    <label
-                      class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                      for="grid-state"
-                    >
-                      Select User
-                    </label>
-                    <div class="relative">
-                      <select
-                        class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                        id="grid-state"
-                        name="department"
-                        value={formData.department}
-                        type="text"
-                        required
-                        onChange={handleChange}
-                      >
-                        <option value="">Select Department</option>
-                        {!departmentLoading &&
-                          departmentData.map((departments) => (
-                            <option
-                              key={departments.Id}
-                              value={departments.Name}
-                            >
-                              {departments.Name}
-                            </option>
-                          ))}
-                      </select>
-                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                        <svg
-                          class="fill-current h-4 w-4"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                )}
 
                 {isUpdate && (
-                  <div class="w-full md:w-1/4 px-3 mb-6 md:mb-0">
+                  <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                     <label
                       class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                       for="grid-state"
@@ -222,13 +212,14 @@ function UserMobilePage() {
                         onChange={handleGivenFromDateChange}
                         value={formData.GivenFrom}
                         id="grid-state"
+                        disabled
                       />
                     </div>
                   </div>
                 )}
 
                 {isUpdate && (
-                  <div class="w-full md:w-1/4 px-3 mb-6 md:mb-0">
+                  <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                     <label
                       class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                       for="grid-state"
@@ -257,7 +248,7 @@ function UserMobilePage() {
 
           {!userLoading && userMobileData?.length !== 0 && (
             <div className="mx-2 flex-grow justify-center justify-items-center">
-              <div className="text-xl text-center mt-6">Mobile Numbers</div>
+              <div className="text-xl text-center mt-6">Vecant Mobile Numbers</div>
               <table className="border-collapse mt-6 mx-auto">
                 <thead>
                   <tr>
@@ -292,6 +283,7 @@ function UserMobilePage() {
                             onClick={() =>
                               handleUserMobileEdit(
                                 row.Id,
+                                row.UserId,
                                 row.MobileNumber,
                                 row.GivenFrom,
                                 row.GivenUntill
@@ -302,9 +294,6 @@ function UserMobilePage() {
                           </button>
                           <button
                             className="text-red-500"
-                            onClick={() => {
-                              handleDeleteUser(row.Id);
-                            }}
                           >
                             <MdDelete size={20} />
                           </button>
@@ -323,3 +312,4 @@ function UserMobilePage() {
 }
 
 export default UserMobilePage;
+

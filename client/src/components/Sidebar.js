@@ -56,10 +56,19 @@ function Sidebar() {
       <button className="btn p-8" onClick={() => navigate(`/mobitel/usermobile`)}>
         <p
           className={`text-xl ${
-            location.pathname.includes('/mobitel/usermobile') ? 'border-b border-black' : ''
+            location.pathname === '/mobitel/usermobile' ? 'border-b border-black' : ''
           }`}
         >
           Mobile Management
+        </p>
+      </button>
+      <button className="btn p-8" onClick={() => navigate(`/mobitel/usermobile/vecant`)}>
+        <p
+          className={`text-xl ${
+            location.pathname.includes('/mobitel/usermobile/vecant') ? 'border-b border-black' : ''
+          }`}
+        >
+          Assign Vecant Numbers
         </p>
       </button>
     </div>
