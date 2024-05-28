@@ -106,9 +106,13 @@ function DepartmentsPage() {
   };
   return (
     <>
-      <Navbar />
-      <div className=" flex flex-row justify-items-center">
-        <Sidebar />
+      <div className="h-[75px]">
+        <Navbar />
+      </div>
+      <div className=" flex justify-items-center">
+        <div className="w-[300px]">
+          <Sidebar />
+        </div>
         <div className="flex-grow justify-center justify-items-center">
           <div className="">
             <form class="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4  mt-10 mx-20">

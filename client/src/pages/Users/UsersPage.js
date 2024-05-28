@@ -10,6 +10,8 @@ import {
 import { useGetAllDepartmentsQuery } from '../../services/departmentService';
 import { MdEdit, MdDelete } from 'react-icons/md';
 import { toast } from 'react-toastify';
+import { faX } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function UsersPage() {
   const { data: userData, isLoading: userLoading } = useGetAllUsersQuery();
@@ -21,6 +23,8 @@ function UsersPage() {
   const [deleteUser] = useDeleteUserMutation();
 
   const [isUpdate, setIsUpdate] = useState(false);
+  const [removeUser, setRemoveUser] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
 
   const [formData, setFormData] = useState({
     id: '',
@@ -103,22 +107,37 @@ function UsersPage() {
     }
   };
 
-  const handleDeleteUser = async (id) => {
-    const deleteUserRes = await deleteUser(id);
+  const handleDeleteUserRequest = (id) => {
+    document.body.style.overflow = 'hidden';
+    setDeleteId(id);
+    setRemoveUser(true);
+  };
+
+  const handleDeleteUser = async () => {
+    const deleteUserRes = await deleteUser(deleteId);
+
 
     if (deleteUserRes.error) {
       toast.error('User delete failed');
     } else {
       toast.success('User deleted successfully');
     }
+
+    setRemoveUser(false);
+    document.body.style.overflow = 'auto';
+    setDeleteId(null);
   };
   return (
     <>
-      <Navbar />
-      <div className=" flex flex-row justify-items-center">
-        <Sidebar />
+      <div className="h-[75px]">
+        <Navbar />
+      </div>
+      <div className=" flex justify-items-center">
+        <div className="w-[300px]">
+          <Sidebar />
+        </div>
         <div className="flex-grow justify-center justify-items-center">
-          <div className="">
+          <div className={`${removeUser ? 'blur-sm': 'blur-none'}`}>
             <form class="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4  mt-10 mx-20">
               <div class="flex flex-wrap -mx-3 mb-2">
                 <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
@@ -209,7 +228,7 @@ function UsersPage() {
           </div>
 
           {!userLoading && userData?.length !== 0 && (
-            <div className="mx-2 flex-grow justify-center justify-items-center">
+            <div className={`mx-2 flex-grow justify-center justify-items-center ${removeUser ? 'blur-sm': 'blur-none'}`}>
               <div className="text-xl text-center mt-6">All Users</div>
               <table className="border-collapse mt-6 mx-auto">
                 <thead>
@@ -254,7 +273,7 @@ function UsersPage() {
                           <button
                             className="text-red-500"
                             onClick={() => {
-                              handleDeleteUser(row.Id);
+                              handleDeleteUserRequest(row.Id);
                             }}
                           >
                             <MdDelete size={20} />
@@ -265,6 +284,48 @@ function UsersPage() {
                   ))}
                 </tbody>
               </table>
+            </div>
+          )}
+          {removeUser && (
+            <div className="w-12/12 fixed left-96 right-24 top-64 h-auto z-50 flex justify-center justify-items-center items-center">
+              <div className="shadow-lg  h-[300px]  bg-white rounded-xl px-10">
+                <div className="flex justify-end justify-items-end mt-6">
+                  <button
+                    onClick={() => {
+                      setRemoveUser(false);
+                      document.body.style.overflow = 'auto';
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={faX}
+                      style={{ color: '#2e4057' }}
+                      className="fa-x"
+                    />
+                  </button>
+                </div>
+                <div className="mt-10 text-center px-10">
+                  <p>Are you sure you want to Delete the User</p>
+                </div>
+
+                <div className="mt-16 mx-6 flex justify-between px-10">
+                  <button
+                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-8 border border-blue-500 hover:border-transparent rounded"
+                    onClick={handleDeleteUser}
+                  >
+                    Yes
+                  </button>
+
+                  <button
+                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-8 border border-blue-500 hover:border-transparent rounded"
+                    onClick={() => {
+                      setRemoveUser(false);
+                      document.body.style.overflow = 'auto';
+                    }}
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>

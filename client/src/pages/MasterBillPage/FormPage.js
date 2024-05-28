@@ -12,9 +12,8 @@ import { toast } from 'react-toastify';
 import { useGetAllDepartmentsQuery } from '../../services/departmentService';
 
 function FormPage() {
-
   const { data: departmentData, isLoading: departmentLoading } =
-  useGetAllDepartmentsQuery();
+    useGetAllDepartmentsQuery();
   const [formData, setFormData] = useState({
     month: '',
     year: '',
@@ -36,10 +35,10 @@ function FormPage() {
     if (selectedFile) {
       const billsUploadRes = await uploadBill(selectedFile);
 
-      if (billsUploadRes.data.message === "Data inserted successfully") {
+      if (billsUploadRes.data.message === 'Data inserted successfully') {
         toast.success('Bill uploaded successfully');
         fileInputRef.current.value = null;
-        setSelectedFile(null)
+        setSelectedFile(null);
       } else {
         toast.error('Bill upload failed');
       }
@@ -66,14 +65,18 @@ function FormPage() {
     queryParams.set('month', formData.month);
     queryParams.set('year', formData.year);
     queryParams.set('department', formData.department);
-    navigate(`/master-bill-sheet?${queryParams.toString()}`);
+    navigate(`/mobitel/master-bill-sheet?${queryParams.toString()}`);
   };
 
   return (
     <>
-      <Navbar />
-      <div className=" flex flex-row justify-items-center">
-        <Sidebar />
+      <div className="h-[75px]">
+        <Navbar />
+      </div>
+      <div className=" flex justify-items-center">
+        <div className="w-[300px]">
+          <Sidebar />
+        </div>
         <div className="flex-grow justify-center justify-items-center">
           <form
             class="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4  mt-10 mx-20"
@@ -169,13 +172,13 @@ function FormPage() {
                     onChange={handleChange}
                     name="department"
                   >
-                      <option value="">Select Department</option>
-                      {!departmentLoading &&
-                        departmentData.map((departments) => (
-                          <option key={departments.Id} value={departments.Name}>
-                            {departments.Name}
-                          </option>
-                        ))}
+                    <option value="">Select Department</option>
+                    {!departmentLoading &&
+                      departmentData.map((departments) => (
+                        <option key={departments.Id} value={departments.Name}>
+                          {departments.Name}
+                        </option>
+                      ))}
                   </select>
                   <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                     <svg
