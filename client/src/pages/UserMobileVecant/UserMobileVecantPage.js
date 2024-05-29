@@ -13,9 +13,11 @@ import {
 import DatePicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import moment from 'moment-timezone';
 import { parseISO } from 'date-fns';
+import { faX } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function UserMobileVecantPage() {
   const navigate = useNavigate();
@@ -30,6 +32,9 @@ function UserMobileVecantPage() {
   const [deleteUserMobile] = useDeleteUserMobileMutation();
 
   const [isUpdate, setIsUpdate] = useState(false);
+  const [removeMobile, setRemoveMobile] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [password, setPassword] = useState('');
 
   const [formData, setFormData] = useState({
     userId: '',
@@ -67,10 +72,10 @@ function UserMobileVecantPage() {
   function convertToISO(dateString) {
     // Parse the date string into a Date object
     const date = new Date(dateString);
-  
+
     // Get the ISO string from the Date object
     const isoString = date.toISOString();
-  
+
     return isoString;
   }
 
@@ -83,6 +88,18 @@ function UserMobileVecantPage() {
     });
   };
 
+  const handlePasswordChange = (event) => {
+    const { value } = event.target;
+
+    setPassword(value);
+  };
+
+  const handleDeleteMobileRequest = (id) => {
+    document.body.style.overflow = 'hidden';
+    setDeleteId(id);
+    setRemoveMobile(true);
+  };
+
   const handleSubmit = async (e) => {
     const userMobileUpdateData = {
       id: formData.mobileId,
@@ -91,7 +108,7 @@ function UserMobileVecantPage() {
       GivenUntill: null,
     };
 
-    console.log(formData)
+    console.log(formData);
 
     const UserMobileUpdateRes = await updateUserMobile(userMobileUpdateData);
 
@@ -112,13 +129,20 @@ function UserMobileVecantPage() {
     }
   };
 
-  const handleDeleteUser = async (id) => {
-    const deleteUserRes = await deleteUserMobile(id);
+  const handleDeleteUserMobile = async () => {
+    if (password === 'admin1234') {
+      const deleteUserRes = await deleteUserMobile(deleteId);
 
-    if (deleteUserRes.error) {
-      toast.error('User delete failed');
+      if (deleteUserRes.error) {
+        toast.error('User Mobile delete failed');
+      } else {
+        toast.success('User Mobile deleted successfully');
+      }
+      setRemoveMobile(false);
+      document.body.style.overflow = 'auto';
+      setDeleteId(null);
     } else {
-      toast.success('User deleted successfully');
+      toast.error('Password is wrong');
     }
   };
   return (
@@ -130,8 +154,8 @@ function UserMobileVecantPage() {
         <div className="w-[300px]">
           <Sidebar />
         </div>
-        <div className="flex-grow justify-center justify-items-center z-10">
-          <div className=" mt-4">
+        <div className="overflow-x-auto flex-grow justify-center justify-items-center z-10">
+          <div className={`${removeMobile ? 'blur-sm': 'blur-none'} mt-4`}>
             <form class="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4  mt-10 mx-20 border border-gray-600">
               <div class="flex -mx-3 mb-2 justify-center justify-items-center">
                 <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
@@ -234,7 +258,7 @@ function UserMobileVecantPage() {
           </div>
 
           {!userVecantMobileLoading && userMobileVecantData?.length !== 0 && (
-            <div className="mx-2 flex-grow justify-center justify-items-center">
+            <div className={`mx-2 flex-grow justify-center justify-items-center ${removeMobile ? 'blur-sm': 'blur-none'}`}>
               <div className="text-xl text-center mt-6">Mobile Numbers</div>
               <table className="border-collapse mt-6 mx-auto">
                 <thead>
@@ -270,16 +294,16 @@ function UserMobileVecantPage() {
                           <button
                             className="text-gray-600"
                             onClick={() =>
-                              handleUserMobileEdit(
-                                row.Id, 
-                                row.MobileNumber
-                              )
+                              handleUserMobileEdit(row.Id, row.MobileNumber)
                             }
                           >
                             <MdEdit size={20} />
                           </button>
                           <button
                             className="text-red-500"
+                            onClick={() => {
+                              handleDeleteMobileRequest(row.Id);
+                            }}
                           >
                             <MdDelete size={20} />
                           </button>
@@ -289,6 +313,69 @@ function UserMobileVecantPage() {
                   ))}
                 </tbody>
               </table>
+            </div>
+          )}
+
+          {removeMobile && (
+            <div className="w-12/12 fixed left-96 right-24 top-52 h-auto z-50 flex justify-center justify-items-center items-center">
+              <div className="shadow-lg  h-[400px]  bg-white rounded-xl px-10">
+                <div className="flex justify-end justify-items-end mt-6">
+                  <button
+                    onClick={() => {
+                      setRemoveMobile(false);
+                      document.body.style.overflow = 'auto';
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={faX}
+                      style={{ color: '#2e4057' }}
+                      className="fa-x"
+                    />
+                  </button>
+                </div>
+
+                <div class="w-full px-3 mt-6 md:mb-0">
+                  <label
+                    class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                    for="grid-state"
+                  >
+                    Enter Password
+                  </label>
+                  <div class="relative">
+                    <input
+                      class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                      id="grid-state"
+                      name="password"
+                      value={password}
+                      type="password"
+                      required
+                      onChange={handlePasswordChange}
+                    />
+                  </div>
+                </div>
+                <div className="mt-10 text-center px-10">
+                  <p>Are you sure you want to Delete the User</p>
+                </div>
+
+                <div className="mt-16 mx-6 flex justify-between px-10">
+                  <button
+                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-8 border border-blue-500 hover:border-transparent rounded"
+                    onClick={handleDeleteUserMobile}
+                  >
+                    Yes
+                  </button>
+
+                  <button
+                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-8 border border-blue-500 hover:border-transparent rounded"
+                    onClick={() => {
+                      setRemoveMobile(false);
+                      document.body.style.overflow = 'auto';
+                    }}
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>

@@ -4,7 +4,7 @@
 import { React, useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import Navbar from '../../components/Navbar';
-import { MdEdit, MdDelete } from 'react-icons/md';
+import { MdEdit } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import {
   useDeleteUserMobileMutation,
@@ -15,15 +15,12 @@ import {
 import DatePicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
-import { useGetAllDepartmentsQuery } from '../../services/departmentService';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import {useNavigate, } from 'react-router-dom';
 
 function UserMobilePage() {
     const navigate = useNavigate();
   const { data: userMobileData, isLoading: userLoading } =
     useGetAllUserMobileQuery();
-  const { data: departmentData, isLoading: departmentLoading } =
-    useGetAllDepartmentsQuery();
 
   const [newUserMobile] = useNewUserMobileMutation();
   const [updateUserMobile] = useUpdateUserMobileMutation();
@@ -139,15 +136,6 @@ function UserMobilePage() {
     }
   };
 
-  const handleDeleteUser = async (id) => {
-    const deleteUserRes = await deleteUserMobile(id);
-
-    if (deleteUserRes.error) {
-      toast.error('User delete failed');
-    } else {
-      toast.success('User deleted successfully');
-    }
-  };
   return (
     <>
       <div className="h-[75px]">
@@ -157,7 +145,7 @@ function UserMobilePage() {
         <div className="w-[300px]">
           <Sidebar />
         </div>
-        <div className="flex-grow justify-center justify-items-center z-10">
+        <div className="overflow-x-auto ms-16 flex-grow justify-center justify-items-center z-10">
 
         <div className="mt-4 flex justify-center justify-items-center">
             <button
@@ -291,11 +279,6 @@ function UserMobilePage() {
                             }
                           >
                             <MdEdit size={20} />
-                          </button>
-                          <button
-                            className="text-red-500"
-                          >
-                            <MdDelete size={20} />
                           </button>
                         </div>
                       </td>

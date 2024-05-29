@@ -22,7 +22,7 @@ exports.getAll = (req, res) => {
 };
 
 exports.getByMobiles = (req, res) => {
-  const sql ='SELECT * FROM user_mobileJOIN users WHERE user_mobile.UserId = users.Id AND MobileNumber = ?';
+  const sql ='SELECT * FROM user_mobile JOIN users WHERE user_mobile.UserId = users.Id AND MobileNumber = ?';
   db.query(sql, [req.params.MobileNumber], (err, results) => {
     if (err) {
       return res.status(err.code).json({ error: err.message });
