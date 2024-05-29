@@ -25,6 +25,7 @@ function UsersPage() {
   const [isUpdate, setIsUpdate] = useState(false);
   const [removeUser, setRemoveUser] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [password, setPassword] = useState('');
 
   const [formData, setFormData] = useState({
     id: '',
@@ -54,6 +55,12 @@ function UsersPage() {
       ...formData,
       [name]: value,
     });
+  };
+
+  const handlePasswordChange = (event) => {
+    const { value } = event.target;
+
+    setPassword(value);
   };
 
   const handleSubmit = async (e) => {
@@ -114,18 +121,21 @@ function UsersPage() {
   };
 
   const handleDeleteUser = async () => {
-    const deleteUserRes = await deleteUser(deleteId);
+    if (password === 'admin1234') {
+      const deleteUserRes = await deleteUser(deleteId);
 
+      if (deleteUserRes.error) {
+        toast.error('User delete failed');
+      } else {
+        toast.success('User deleted successfully');
+      }
 
-    if (deleteUserRes.error) {
-      toast.error('User delete failed');
+      setRemoveUser(false);
+      document.body.style.overflow = 'auto';
+      setDeleteId(null);
     } else {
-      toast.success('User deleted successfully');
+      toast.error('Password is wrong');
     }
-
-    setRemoveUser(false);
-    document.body.style.overflow = 'auto';
-    setDeleteId(null);
   };
   return (
     <>
@@ -137,7 +147,7 @@ function UsersPage() {
           <Sidebar />
         </div>
         <div className="flex-grow justify-center justify-items-center">
-          <div className={`${removeUser ? 'blur-sm': 'blur-none'}`}>
+          <div className={`${removeUser ? 'blur-sm' : 'blur-none'}`}>
             <form class="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4  mt-10 mx-20">
               <div class="flex flex-wrap -mx-3 mb-2">
                 <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
@@ -228,7 +238,11 @@ function UsersPage() {
           </div>
 
           {!userLoading && userData?.length !== 0 && (
-            <div className={`mx-2 flex-grow justify-center justify-items-center ${removeUser ? 'blur-sm': 'blur-none'}`}>
+            <div
+              className={`mx-2 flex-grow justify-center justify-items-center ${
+                removeUser ? 'blur-sm' : 'blur-none'
+              }`}
+            >
               <div className="text-xl text-center mt-6">All Users</div>
               <table className="border-collapse mt-6 mx-auto">
                 <thead>
@@ -287,8 +301,8 @@ function UsersPage() {
             </div>
           )}
           {removeUser && (
-            <div className="w-12/12 fixed left-96 right-24 top-64 h-auto z-50 flex justify-center justify-items-center items-center">
-              <div className="shadow-lg  h-[300px]  bg-white rounded-xl px-10">
+            <div className="w-12/12 fixed left-96 right-24 top-52 h-auto z-50 flex justify-center justify-items-center items-center">
+              <div className="shadow-lg  h-[400px]  bg-white rounded-xl px-10">
                 <div className="flex justify-end justify-items-end mt-6">
                   <button
                     onClick={() => {
@@ -303,6 +317,26 @@ function UsersPage() {
                     />
                   </button>
                 </div>
+                <div class="w-full px-3 mt-6 md:mb-0">
+                  <label
+                    class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                    for="grid-state"
+                  >
+                    Enter Password
+                  </label>
+                  <div class="relative">
+                    <input
+                      class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                      id="grid-state"
+                      name="password"
+                      value={password}
+                      type="password"
+                      required
+                      onChange={handlePasswordChange}
+                    />
+                  </div>
+                </div>
+
                 <div className="mt-10 text-center px-10">
                   <p>Are you sure you want to Delete the User</p>
                 </div>
