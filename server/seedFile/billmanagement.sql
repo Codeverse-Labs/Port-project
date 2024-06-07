@@ -433,10 +433,24 @@ INSERT INTO `departments` (`ID`,`Name`,`ShortName`) VALUES
 (29, 'Marketing','M & BD');
 
 
+CREATE TABLE telecom (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    MobileNumber INT NOT NULL
+);
 
 
-
-
+CREATE TABLE telebills (
+  Id INT AUTO_INCREMENT PRIMARY KEY,
+  Mobile bigint(20) DEFAULT NULL,
+  Rent decimal(10,2) DEFAULT NULL,
+  Other decimal(10,2) DEFAULT NULL,
+  VoiceUsage decimal(10,2) DEFAULT NULL,
+  CallCharges decimal(10,2) DEFAULT NULL,
+  Total decimal(10,2) DEFAULT NULL,
+  Dpt varchar(100) NOT NULL
+  Month int(11) DEFAULT NULL,
+  Year int(11) DEFAULT NULL
+);
 
 
 
