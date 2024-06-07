@@ -28,12 +28,16 @@ const userRoutes = require('./routes/userRoutes');
 const billRoutes = require('./routes/billRoutes');
 const dptRoutes  = require('./routes/dptRoutes');
 const userMobileRoutes  = require('./routes/userMobileRoutes');
+const telecomRoutes  = require('./routes/telecomRoutes');
+const telebillRoutes  = require('./routes/telebillRoutes');
 
 //routes
 app.use('/users', userRoutes);
 app.use('/bills', billRoutes);
 app.use('/dpt', dptRoutes);
 app.use('/usermobile', userMobileRoutes);
+app.use('/telecom', telecomRoutes);
+app.use('/telebills', telebillRoutes);
 
 //set port
 const PORT = process.env.PORT
