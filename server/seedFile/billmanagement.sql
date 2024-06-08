@@ -447,7 +447,7 @@ CREATE TABLE telebills (
   VoiceUsage decimal(10,2) DEFAULT NULL,
   CallCharges decimal(10,2) DEFAULT NULL,
   Total decimal(10,2) DEFAULT NULL,
-  Dpt varchar(100) NOT NULL
+  Dpt varchar(100) NOT NULL,
   Month int(11) DEFAULT NULL,
   Year int(11) DEFAULT NULL
 );
