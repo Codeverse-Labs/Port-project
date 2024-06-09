@@ -184,7 +184,7 @@ function DepartmentsPage() {
                 <tbody>
                   {departmentData?.map((row, rowIndex) => (
                     <tr key={rowIndex}>
-                      {Object.keys(departmentData[0]).map(
+                      {Object.keys(departmentData[0])?.map(
                         (header, colIndex) => (
                           <td
                             key={colIndex}
