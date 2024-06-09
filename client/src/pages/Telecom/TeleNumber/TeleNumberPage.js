@@ -2,64 +2,38 @@
 
 
 import { React, useState } from 'react';
-import Sidebar from '../../components/Sidebar';
-import Navbar from '../../components/Navbar';
-import { MdEdit } from 'react-icons/md';
+import Sidebar from '../../../components/Sidebar';
+import Navbar from '../../../components/Navbar';
+import { MdEdit , MdDelete} from 'react-icons/md';
 import { toast } from 'react-toastify';
-import {
-  useGetAllUserMobileQuery,
-  useNewUserMobileMutation,
-  useUpdateUserMobileMutation,
-} from '../../services/userMobileService';
-import DatePicker from 'react-date-picker';
+import { useGetAllTelecomQuery, useNewTelecomMutation, useUpdateTelecomMutation, useDeleteTelecomMutation } from '../../../services/telecomService';
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
-import {useNavigate, } from 'react-router-dom';
+import { faX } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-function UserMobilePage() {
-    const navigate = useNavigate();
+
+function TeleNumberPage() {
   const { data: userMobileData, isLoading: userLoading } =
-    useGetAllUserMobileQuery();
+    useGetAllTelecomQuery();
 
-  const [newUserMobile] = useNewUserMobileMutation();
-  const [updateUserMobile] = useUpdateUserMobileMutation();
+  const [newUserMobile] = useNewTelecomMutation();
+  const [updateUserMobile] = useUpdateTelecomMutation();
+  const [deleteUserMobile] = useDeleteTelecomMutation();
 
   const [isUpdate, setIsUpdate] = useState(false);
 
+  const [removeMobile, setRemoveMobile] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [password, setPassword] = useState('');
+
   const [formData, setFormData] = useState({
-    mobileId: '',
+    id: '',
     number: '',
-    userId: '',
-    GivenFrom: new Date(),
-    GivenUntill: new Date(),
   });
 
-  const handleGivenFromDateChange = (date) => {
-    setFormData({
-      ...formData,
-      GivenFrom: date,
-    });
-  };
 
-  const handleGivenUntilDateChange = (date) => {
-    setFormData({
-      ...formData,
-      GivenUntill: date,
-    });
-  };
-
-  function convertToISO(dateString) {
-    // Parse the date string into a Date object
-    const date = new Date(dateString);
-  
-    // Get the ISO string from the Date object
-    const isoString = date.toISOString();
-  
-    return isoString;
-  }
-  
-
-  const handleUserMobileEdit = (id, user, MobileNumber, GivenFrom, GivenUntill) => {
+  const handleUserMobileEdit = (id, MobileNumber) => {
     setIsUpdate(true);
     window.scrollTo({
       top: 0,
@@ -67,11 +41,9 @@ function UserMobilePage() {
     });
 
     setFormData({
-      mobileId: id,
-      userId: user,
+      id: id,
       number: MobileNumber,
-      GivenFrom: GivenFrom === '0000-00-00' ? null: GivenFrom,
-      GivenUntill: GivenUntill === '0000-00-00' ? new Date() : GivenUntill,
+
     });
   };
 
@@ -84,16 +56,43 @@ function UserMobilePage() {
     });
   };
 
+  const handlePasswordChange = (event) => {
+    const { value } = event.target;
+
+    setPassword(value);
+  };
+
+  const handleDeleteMobileRequest = (id) => {
+    document.body.style.overflow = 'hidden';
+    setDeleteId(id);
+    setRemoveMobile(true);
+  };
+
+  const handleDeleteUserMobile = async () => {
+    if (password === 'admin1234') {
+      const deleteUserRes = await deleteUserMobile(deleteId);
+
+      if (deleteUserRes.error) {
+        toast.error('Telecom number delete failed');
+      } else {
+        toast.success('Telecom number deleted successfully');
+      }
+      setRemoveMobile(false);
+      document.body.style.overflow = 'auto';
+      setDeleteId(null);
+    } else {
+      toast.error('Password is wrong');
+    }
+  };
+
   const handleSubmit = async (e) => {
     const userMobileCreateData = {
-      MobileNumber: formData.number,
+      mobileNumber: formData.number,
     };
 
     const userMobileUpdateData = {
-      id: formData.mobileId,
-      UserId: formData.userId,
-      GivenFrom: formData.GivenFrom,
-      GivenUntill: convertToISO(formData.GivenUntill),
+      id: formData.id,
+      mobileNumber: formData.number
     };
 
     console.log(formData)
@@ -102,11 +101,8 @@ function UserMobilePage() {
       const UserMobileUpdateRes = await updateUserMobile(userMobileUpdateData);
 
       setFormData({
-        mobileId: '',
+        id: '',
         number: '',
-        userId: '',
-        GivenFrom: new Date(),
-        GivenUntill: new Date(),
       });
       setIsUpdate(false);
 
@@ -144,16 +140,7 @@ function UserMobilePage() {
         </div>
         <div className="overflow-x-auto ms-16 flex-grow justify-center justify-items-center z-10">
 
-        <div className="mt-4 flex justify-center justify-items-center">
-            <button
-              class="mt-10 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-              type="button"
-              onClick={() => navigate('/mobitel/usermobile/vecant')}
-            >
-              Assign Vecant Numbers
-            </button>
-          </div>
-          <div className=" mt-4">
+          <div className={`${removeMobile ? 'blur-sm': 'blur-none'} mt-4`}>
             <form class="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4  mt-10 mx-20 border border-gray-600">
               <div class="flex -mx-3 mb-2 justify-center justify-items-center">
                 {
@@ -164,10 +151,10 @@ function UserMobilePage() {
                       class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                       for="grid-state"
                     >
-                      Phone Number
+                      Telecom Number
                     </label>
                     <div class="relative flex items-center gap-2">
-                      <p>(+94)</p>
+                      (+0)
                       <input
                         class=" w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                         id="grid-state"
@@ -176,50 +163,12 @@ function UserMobilePage() {
                         type="text"
                         required
                         onChange={handleChange}
-                        disabled={isUpdate ? true: false}
                       />
                     </div>
                   </div>
                 }
 
 
-                {isUpdate && (
-                  <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                    <label
-                      class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                      for="grid-state"
-                    >
-                      Given Date
-                    </label>
-                    <div class="relative">
-                      <DatePicker
-                        className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                        onChange={handleGivenFromDateChange}
-                        value={formData.GivenFrom}
-                        id="grid-state"
-                        disabled
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {isUpdate && (
-                  <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                    <label
-                      class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                      for="grid-state"
-                    >
-                      Given Until
-                    </label>
-                    <div class="relative">
-                      <DatePicker
-                        className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                        onChange={handleGivenUntilDateChange}
-                        value={formData.GivenUntill}
-                      />
-                    </div>
-                  </div>
-                )}
               </div>
               <button
                 class="mt-10 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
@@ -232,8 +181,8 @@ function UserMobilePage() {
           </div>
 
           {!userLoading && userMobileData?.length !== 0 && (
-            <div className="mx-2 flex-grow justify-center justify-items-center">
-              <div className="text-xl text-center mt-6">Vecant Mobile Numbers</div>
+            <div className={`${removeMobile ? 'blur-sm': 'blur-none'} mx-2 flex-grow justify-center justify-items-center`}>
+              <div className="text-xl text-center mt-6">Telecom Numbers</div>
               <table className="border-collapse mt-6 mx-auto">
                 <thead>
                   <tr>
@@ -268,14 +217,19 @@ function UserMobilePage() {
                             onClick={() =>
                               handleUserMobileEdit(
                                 row.Id,
-                                row.UserId,
                                 row.MobileNumber,
-                                row.GivenFrom,
-                                row.GivenUntill
                               )
                             }
                           >
                             <MdEdit size={20} />
+                          </button>
+                          <button
+                            className="text-red-500"
+                            onClick={() => {
+                              handleDeleteMobileRequest(row.Id);
+                            }}
+                          >
+                            <MdDelete size={20} />
                           </button>
                         </div>
                       </td>
@@ -285,11 +239,74 @@ function UserMobilePage() {
               </table>
             </div>
           )}
+
+{removeMobile && (
+            <div className="w-12/12 fixed left-96 right-24 top-52 h-auto z-50 flex justify-center justify-items-center items-center">
+              <div className="shadow-lg  h-[400px]  bg-white rounded-xl px-10">
+                <div className="flex justify-end justify-items-end mt-6">
+                  <button
+                    onClick={() => {
+                      setRemoveMobile(false);
+                      document.body.style.overflow = 'auto';
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={faX}
+                      style={{ color: '#2e4057' }}
+                      className="fa-x"
+                    />
+                  </button>
+                </div>
+
+                <div class="w-full px-3 mt-6 md:mb-0">
+                  <label
+                    class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                    for="grid-state"
+                  >
+                    Enter Password
+                  </label>
+                  <div class="relative">
+                    <input
+                      class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                      id="grid-state"
+                      name="password"
+                      value={password}
+                      type="password"
+                      required
+                      onChange={handlePasswordChange}
+                    />
+                  </div>
+                </div>
+                <div className="mt-10 text-center px-10">
+                  <p>Are you sure you want to Delete the Telecom number</p>
+                </div>
+
+                <div className="mt-16 mx-6 flex justify-between px-10">
+                  <button
+                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-8 border border-blue-500 hover:border-transparent rounded"
+                    onClick={handleDeleteUserMobile}
+                  >
+                    Yes
+                  </button>
+
+                  <button
+                    className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-8 border border-blue-500 hover:border-transparent rounded"
+                    onClick={() => {
+                      setRemoveMobile(false);
+                      document.body.style.overflow = 'auto';
+                    }}
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>
   );
 }
 
-export default UserMobilePage;
+export default TeleNumberPage;
 

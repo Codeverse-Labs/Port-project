@@ -8,6 +8,9 @@ import DepartmentsPage from './pages/Departments/DepartmentsPage';
 import UsersPage from './pages/Users/UsersPage';
 import UserMobilePage from './pages/UserMobile/UserMobilePage';
 import UserMobileVecantPage from './pages/UserMobileVecant/UserMobileVecantPage';
+import TeleNumberPage from './pages/Telecom/TeleNumber/TeleNumberPage';
+import TelecomBillPage from './pages/Telecom/TelecomBills/TelecomBillPage';
+import DSummaryHomePage from './pages/DivisionSummary/DSummaryHomePage';
 
 function App() {
   return (
@@ -19,11 +22,14 @@ function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route exact path="/mobitel/master-bill" element={<FormPage />} />
         <Route path="/mobitel/master-bill-sheet" element={<MasterBillPage />} />
-        <Route path="/mobitel/d-summary" element={<DSummaryPage />} />
+        <Route path="/mobitel/d-summary" element={<DSummaryHomePage />} />
+        <Route path="/mobitel/d-summary-sheet" element={<DSummaryPage />} />
         <Route path="/mobitel/divisions" element={<DepartmentsPage />} />
         <Route exact path="/mobitel/users" element={<UsersPage />} />
         <Route exact path="/mobitel/usermobile" element={<UserMobilePage />} />
         <Route exact path="/mobitel/usermobile/vecant" element={<UserMobileVecantPage />} />
+        <Route exact path="/telecom/numbers" element={<TeleNumberPage />} />
+        <Route exact path="/telecom/bills" element={<TelecomBillPage />} />
       </Routes>
     </BrowserRouter>
   );

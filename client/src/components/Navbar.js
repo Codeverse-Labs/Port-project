@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import logo from '../assets/images/logo.png';
 
 function Navbar() {
@@ -16,7 +16,7 @@ function Navbar() {
 
         <div className="mx-5">
           <div className="grid grid-cols-2 gap-5">
-            <button className="btn">
+            <button className="btn" onClick={() => navigate(`/telecom/numbers`)}>
               <p
                 className={`text-xl text-gray-700 hover:text-gray-500 ${
                   location.pathname.includes('telecom/')

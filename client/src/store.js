@@ -3,6 +3,8 @@ import { userApi } from './services/userService.js';
 import { billApi } from './services/billService.js';
 import { departmentApi } from './services/departmentService.js';
 import { userMobileApi } from './services/userMobileService.js';
+import { telecomApi } from './services/telecomService.js';
+import { telebillApi } from './services/telebillService.js';
 
 // initial state of the store
 const initialState = {
@@ -15,6 +17,8 @@ const combinedReducer = combineReducers({
   [billApi.reducerPath]: billApi.reducer,
   [departmentApi.reducerPath]: departmentApi.reducer,
   [userMobileApi.reducerPath]: userMobileApi.reducer,
+  [telecomApi.reducerPath]: telecomApi.reducer,
+  [telebillApi.reducerPath]: telebillApi.reducer,
 });
 
 // Create the Redux store with the root reducer
@@ -27,6 +31,8 @@ const store = configureStore({
       .concat(billApi.middleware)
       .concat(departmentApi.middleware)
       .concat(userMobileApi.middleware)
+      .concat(telecomApi.middleware)
+      .concat(telebillApi.middleware)
 });
 
 export default store;

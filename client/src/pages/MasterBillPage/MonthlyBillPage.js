@@ -1,7 +1,4 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
-import Navbar from '../../components/Navbar';
-import Sidebar from '../../components/Sidebar';
 import { useGetMonthlyBillsQuery } from '../../services/billService';
 
 function MonthlyBillPage({ month, year }) {
@@ -56,7 +53,7 @@ function MonthlyBillPage({ month, year }) {
             <tbody>
               {monthlyData?.map((row, rowIndex) => (
                 <tr key={rowIndex}>
-                  {Object.keys(monthlyData[0]).map((header, colIndex) => (
+                  {Object.keys(monthlyData[0])?.map((header, colIndex) => (
                     <td
                       key={colIndex}
                       className="border border-gray-500 px-4 py-2"

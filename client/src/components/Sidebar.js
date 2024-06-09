@@ -1,11 +1,13 @@
 import React from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
   return (
     <>
+ { location.pathname.includes('/mobitel/') && (
+
     <div className="flex flex-col justify-items-center min-w-[300px] bg-slate-100 min-h-[100vh] items-center align-middle fixed">
       <button className={`btn p-8`} onClick={() => navigate(`/mobitel/master-bill`)}>
         <p
@@ -19,7 +21,7 @@ function Sidebar() {
       <button className="btn p-8" onClick={() => navigate(`/mobitel/d-summary`)}>
         <p
           className={`text-xl ${
-            location.pathname === '/mobitel/d-summary' ? 'border-b border-black' : ''
+            location.pathname.includes('/mobitel/d-summary') ? 'border-b border-black' : ''
           }`}
         >
           Division Summary
@@ -71,7 +73,45 @@ function Sidebar() {
           Assign Vecant Numbers
         </p>
       </button>
-    </div>
+    </div>)}
+
+    {
+      location.pathname.includes('/telecom/') && (
+        <div className="flex flex-col justify-items-center min-w-[300px] bg-slate-100 min-h-[100vh] items-center align-middle fixed">
+        <button className={`btn p-8`} onClick={() => navigate(`/telecom/bills`)}>
+          <p
+            className={`text-xl ${
+              location.pathname.includes('/telecom/bills') ? 'border-b border-black' : ''
+            }`}
+          >
+            Master Bill
+          </p>
+        </button>
+        <button className="btn p-8" onClick={() => navigate(`/telecom/d-summary`)}>
+          <p
+            className={`text-xl ${
+              location.pathname === '/telecom/d-summary' ? 'border-b border-black' : ''
+            }`}
+          >
+            Division Summary
+          </p>
+        </button>
+
+  
+        <button className="btn p-8" onClick={() => navigate(`/telecom/numbers`)}>
+          <p
+            className={`text-xl ${
+              location.pathname.includes('/telecom/numbers') ? 'border-b border-black' : ''
+            }`}
+          >
+            Telecom Numbers
+          </p>
+        </button>
+      </div>
+      )
+    }
+
+
     </>
   );
 }

@@ -209,7 +209,7 @@ function UsersPage() {
                     >
                       <option value="">Select Department</option>
                       {!departmentLoading &&
-                        departmentData.map((departments) => (
+                        departmentData?.map((departments) => (
                           <option key={departments.Id} value={departments.Name}>
                             {departments.Name}
                           </option>
@@ -261,7 +261,7 @@ function UsersPage() {
                 <tbody>
                   {userData?.map((row, rowIndex) => (
                     <tr key={rowIndex}>
-                      {Object.keys(userData[0]).map((header, colIndex) => (
+                      {Object.keys(userData[0])?.map((header, colIndex) => (
                         <td
                           key={colIndex}
                           className="border border-gray-500 px-4 py-2"

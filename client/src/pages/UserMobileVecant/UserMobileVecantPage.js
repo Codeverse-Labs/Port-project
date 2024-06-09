@@ -6,21 +6,16 @@ import { toast } from 'react-toastify';
 import {
   useDeleteUserMobileMutation,
   useGetAllVecantUserMobileQuery,
-  useNewUserMobileMutation,
   useUpdateUserMobileMutation,
   useGetAllVecantUsersQuery,
 } from '../../services/userMobileService';
 import DatePicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
-import { useNavigate} from 'react-router-dom';
-import moment from 'moment-timezone';
-import { parseISO } from 'date-fns';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function UserMobileVecantPage() {
-  const navigate = useNavigate();
   const { data: userMobileVecantData, isLoading: userVecantMobileLoading } =
     useGetAllVecantUserMobileQuery();
   const {
@@ -50,12 +45,6 @@ function UserMobileVecantPage() {
     });
   };
 
-  const handleGivenUntilDateChange = (date) => {
-    setFormData({
-      ...formData,
-      GivenUntill: date,
-    });
-  };
 
   const handleUserMobileEdit = (id, MobileNumber) => {
     setIsUpdate(true);
@@ -213,7 +202,7 @@ function UserMobileVecantPage() {
                     >
                       <option value="">Select User</option>
                       {!userMobileVecantUserLoading &&
-                        userMobileVecantUserData.map((item) => (
+                        userMobileVecantUserData?.map((item) => (
                           <option key={item.Id} value={item.Id}>
                             {item.Name}
                           </option>
@@ -279,7 +268,7 @@ function UserMobileVecantPage() {
                 <tbody>
                   {userMobileVecantData?.map((row, rowIndex) => (
                     <tr key={rowIndex}>
-                      {Object.keys(userMobileVecantData[0]).map(
+                      {Object.keys(userMobileVecantData[0])?.map(
                         (header, colIndex) => (
                           <td
                             key={colIndex}
