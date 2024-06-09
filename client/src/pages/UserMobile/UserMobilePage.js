@@ -7,7 +7,6 @@ import Navbar from '../../components/Navbar';
 import { MdEdit } from 'react-icons/md';
 import { toast } from 'react-toastify';
 import {
-  useDeleteUserMobileMutation,
   useGetAllUserMobileQuery,
   useNewUserMobileMutation,
   useUpdateUserMobileMutation,
@@ -24,10 +23,8 @@ function UserMobilePage() {
 
   const [newUserMobile] = useNewUserMobileMutation();
   const [updateUserMobile] = useUpdateUserMobileMutation();
-  const [deleteUserMobile] = useDeleteUserMobileMutation();
 
   const [isUpdate, setIsUpdate] = useState(false);
-  const [isAssign, setIsAssign] = useState(false);
 
   const [formData, setFormData] = useState({
     mobileId: '',
@@ -73,8 +70,8 @@ function UserMobilePage() {
       mobileId: id,
       userId: user,
       number: MobileNumber,
-      GivenFrom: GivenFrom,
-      GivenUntill: GivenUntill === null ? new Date() : GivenUntill,
+      GivenFrom: GivenFrom === '0000-00-00' ? null: GivenFrom,
+      GivenUntill: GivenUntill === '0000-00-00' ? new Date() : GivenUntill,
     });
   };
 
@@ -254,7 +251,7 @@ function UserMobilePage() {
                 <tbody>
                   {userMobileData?.map((row, rowIndex) => (
                     <tr key={rowIndex}>
-                      {Object.keys(userMobileData[0]).map(
+                      {Object.keys(userMobileData[0])?.map(
                         (header, colIndex) => (
                           <td
                             key={colIndex}

@@ -1,11 +1,8 @@
-import { React, useState, useEffect, useRef } from 'react';
+import { React, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar';
 import Navbar from '../../components/Navbar';
-import { departments } from '../MasterBillPage/utils/departments';
-import { useGetAllUsersQuery } from '../../services/userService';
 import {
-  useGetDepartmentBillsQuery,
   useUploadBillsMutation,
 } from '../../services/billService';
 import { toast } from 'react-toastify';

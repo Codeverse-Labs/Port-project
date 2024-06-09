@@ -24,7 +24,7 @@ const LoginPage = () => {
 
     if (username === validUsername && password === validPassword) {
       // Redirect to dashboard upon successful login
-      navigate('/dashboard');
+      navigate('/mobitel/master-bill');
     } else {
       setError('Invalid username or password');
     }
