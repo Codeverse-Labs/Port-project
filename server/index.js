@@ -30,6 +30,7 @@ const dptRoutes  = require('./routes/dptRoutes');
 const userMobileRoutes  = require('./routes/userMobileRoutes');
 const telecomRoutes  = require('./routes/telecomRoutes');
 const telebillRoutes  = require('./routes/telebillRoutes');
+const telebillcalcRoutes  = require('./routes/telebillcalcRoutes');
 
 //routes
 app.use('/users', userRoutes);
@@ -38,6 +39,7 @@ app.use('/dpt', dptRoutes);
 app.use('/usermobile', userMobileRoutes);
 app.use('/telecom', telecomRoutes);
 app.use('/telebills', telebillRoutes);
+app.use('/telebill/payable', telebillcalcRoutes);
 
 //set port
 const PORT = process.env.PORT

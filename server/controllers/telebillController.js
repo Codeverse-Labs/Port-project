@@ -63,3 +63,17 @@ exports.deleteById = (req, res) => {
     }
   });
 };
+
+exports.getMonthlyBills = (req, res) => {
+  const { month, year } = req.query; 
+
+  const sql = `SELECT * FROM telebills WHERE telebills.Month = ? AND telebills.Year = ?;`;
+
+  db.query(sql, [month, year], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    } else {
+      res.status(200).json(results);
+    }
+  });
+};
