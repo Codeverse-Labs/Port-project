@@ -6,7 +6,7 @@ const telebillController = require('../controllers/telebillController');
 router.post('/', telebillController.create);
 
 // get all 
-router.get('/', telebillController.getAll);
+router.get('/', telebillController.getMonthlyBills);
 
 // update
 router.put('/:id', telebillController.updateById);
