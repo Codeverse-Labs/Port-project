@@ -78,10 +78,10 @@ function Sidebar() {
     {
       location.pathname.includes('/telecom/') && (
         <div className="flex flex-col justify-items-center min-w-[300px] bg-slate-100 min-h-[100vh] items-center align-middle fixed">
-        <button className={`btn p-8`} onClick={() => navigate(`/telecom/bills`)}>
+        <button className={`btn p-8`} onClick={() => navigate(`/telecom/master-bill`)}>
           <p
             className={`text-xl ${
-              location.pathname.includes('/telecom/bills') ? 'border-b border-black' : ''
+              location.pathname.includes('/telecom/master-bill') ? 'border-b border-black' : ''
             }`}
           >
             Master Bill
