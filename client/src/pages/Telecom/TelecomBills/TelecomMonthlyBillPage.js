@@ -100,11 +100,27 @@ function TelecomMonthlyBillPage() {
         { charge: 'IDD Levy', amount: payableData[0].iddLevy },
         {
           charge: 'VAT- 15%',
-          amount: payableData[0].vat.toFixed(2),
+          amount: (
+            (totalAmount -
+              payableData[0].discount +
+              payableData[0].teleLev +
+              payableData[0].cess +
+              payableData[0].sscl +
+              payableData[0].iddLevy) *
+            0.15
+          ).toFixed(2),
         },
         {
           charge: 'Total   Payable',
-          amount: payableData[0].Total.toFixed(2),
+          amount: (
+            (totalAmount -
+              payableData[0].discount +
+              payableData[0].teleLev +
+              payableData[0].cess +
+              payableData[0].sscl +
+              payableData[0].iddLevy) *
+            1.15
+          ).toFixed(2),
         },
       ]);
     }
@@ -372,7 +388,7 @@ function TelecomMonthlyBillPage() {
     setEditPayable(true);
 
     if (payableData?.length !== 0) {
-        setPayableFormData({
+      setPayableFormData({
         payableId: payableData[0].Id,
         discount: payableData[0].discount,
         teleLev: payableData[0].teleLev,
@@ -382,10 +398,9 @@ function TelecomMonthlyBillPage() {
         vat: payableData[0].vat,
         total: payableData[0].total,
       });
-
     }
 
-    console.log(formData)
+    console.log(formData);
   };
 
   const handleDeleteTeleBill = async () => {
@@ -416,7 +431,7 @@ function TelecomMonthlyBillPage() {
         </div>
         <div className="overflow-x-auto ms-4 flex-grow justify-center justify-items-center z-10">
           {isUpdate && (
-            <div className={`mt-4 ${removeMobile  ? 'blur-sm' : 'blur-none'}`}>
+            <div className={`mt-4 ${removeMobile ? 'blur-sm' : 'blur-none'}`}>
               <form class="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4  mt-10 mx-20 border border-gray-600">
                 <div class="flex -mx-3 mb-2 justify-center justify-items-center">
                   <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
@@ -661,7 +676,11 @@ function TelecomMonthlyBillPage() {
           )}
 
           {!payableLoading && (
-            <div className={`mt-4 ${removeMobile || editPayable ? 'blur-sm' : 'blur-none'}`}>
+            <div
+              className={`mt-4 ${
+                removeMobile || editPayable ? 'blur-sm' : 'blur-none'
+              }`}
+            >
               <div class="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4  mt-10 mx-20 border border-gray-600">
                 <div className="mx-4 text-center font-bold flex justify-end justify-items-end">
                   <button
@@ -682,7 +701,15 @@ function TelecomMonthlyBillPage() {
                     <span className="text-black">
                       {' '}
                       Rs.
-                      {payableData[0].Total.toFixed(2)}
+                      {(
+                        (totalAmount -
+                          payableData[0].discount +
+                          payableData[0].teleLev +
+                          payableData[0].cess +
+                          payableData[0].sscl +
+                          payableData[0].iddLevy) *
+                        1.15
+                      ).toFixed(2)}
                     </span>
                   </div>
                   <div
