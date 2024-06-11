@@ -1,4 +1,5 @@
 import { React, useState, useRef, useMemo } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '../../../components/Sidebar';
 import Navbar from '../../../components/Navbar';
 import { MdEdit, MdDelete } from 'react-icons/md';
@@ -15,6 +16,8 @@ import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
 
 function TelecomBillPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const tableRef = useRef(null);
   const { data: telecomNumberData, isLoading: telecomNumberLoading } =
     useGetAllTelecomQuery();
@@ -28,11 +31,12 @@ function TelecomBillPage() {
   const [deleteTelecomBill] = useDeleteTelebillsMutation();
 
   const totalAmount = useMemo(() => {
-    return userMobileData?.reduce((total, item) => {
-      return !isNaN(item.Total) ? total + item.Total : total;
-    }, 0).toFixed(2);
+    return userMobileData
+      ?.reduce((total, item) => {
+        return !isNaN(item.Total) ? total + item.Total : total;
+      }, 0)
+      .toFixed(2);
   }, [userMobileData]);
-  
 
   const [isUpdate, setIsUpdate] = useState(false);
 
@@ -40,18 +44,6 @@ function TelecomBillPage() {
   const years = Array.from({ length: 10 }, (_, i) => selectedYear - i);
 
 
-
-  const data = [
-    { charge: 'Rental & Call Charges', amount: totalAmount },
-    { charge: '(MIDC Discount)', amount: 0.00 },
-    { charge: 'Sub Total', amount: totalAmount },
-    { charge: 'Tele Leve', amount: 59628.82 },
-    { charge: 'CESS', amount: 9068.52 },
-    { charge: 'SSCL', amount: 13138.76 },
-    { charge: 'IDD Levy', amount: 0.00 },
-    { charge: 'VAT- 15%', amount: ((parseFloat(totalAmount) + 59628.82 + 13138.76)*0.15) },
-    { charge: 'Total   Payable', amount: ((parseFloat(totalAmount) + 59628.82 + 13138.76)*1.15) },
-  ];
 
   const [formData, setFormData] = useState({
     id: '',
@@ -67,36 +59,20 @@ function TelecomBillPage() {
     year: null,
   });
 
-  const handleUserMobileEdit = (
-    id,
-    Mobile,
-    Rent,
-    Other,
-    VoiceUsage,
-    CallCharges,
-    Dpt,
-    Month,
-    Year
-  ) => {
-    setIsUpdate(true);
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+  const [searchFormData, setSearchFormData] = useState({
+    searchMonth: '',
+    searchYear: ''
+  });
 
-    setFormData({
-      id: id,
-      mobile: Mobile,
-      rent: Rent,
-      other: Other,
-      voiceUsage: VoiceUsage,
-      callCharges: CallCharges,
-      dpt: Dpt,
-      month: Month,
-      year: Year,
-      discount: VoiceUsage - CallCharges,
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setSearchFormData({
+      ...searchFormData,
+      [name]: value,
     });
   };
+
+
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -204,21 +180,14 @@ function TelecomBillPage() {
     }
   };
 
-  const handlePrint = () => {
-    const printContent = tableRef.current.innerHTML;
-    const printWindow = window.open('', '', 'height=500, width=800');
-    printWindow.document.write('<html><head><title>Print Table</title>');
-    // Add styles to the print window
-    printWindow.document.write('<style>');
-    printWindow.document.write('table { width: 100%; border-collapse: collapse; }');
-    printWindow.document.write('th, td { border: 1px solid black; padding: 8px; text-align: left; }');
-    printWindow.document.write('th { background-color: #f2f2f2; }');
-    printWindow.document.write('</style>');
-    printWindow.document.write('</head><body>');
-    printWindow.document.write('<table>' + printContent + '</table>');
-    printWindow.document.write('</body></html>');
-    printWindow.document.close();
-    printWindow.print();
+  const handleFormSubmit = (e) => {
+
+    console.log(searchFormData)
+    e.preventDefault();
+    const queryParams = new URLSearchParams(location.search);
+    queryParams.set('month', searchFormData.searchMonth);
+    queryParams.set('year', searchFormData.searchYear);
+    navigate(`/telecom/master-bill-sheet?${queryParams.toString()}`);
   };
 
   return (
@@ -231,51 +200,92 @@ function TelecomBillPage() {
           <Sidebar />
         </div>
         <div className="overflow-x-auto ms-16 flex-grow justify-center justify-items-center z-10">
-          <div className=" mt-4">
-            <div class="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4  mt-10 mx-20 border border-gray-600" >
-            <div className="mx-4 text-center font-bold flex justify-end justify-items-end">
-            <button
-              class="mt-2 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-              type="button"
-            onClick={handlePrint}>
-              Print Payable Bill
-            </button>
+          <form
+            class="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4  mt-10 mx-20"
+            onSubmit={handleFormSubmit}
+          >
+            <div class="flex flex-wrap -mx-3 mb-2">
+              <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <label
+                  class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  for="grid-state"
+                >
+                  Month
+                </label>
+                <div class="relative">
+                  <select
+                    class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="grid-state"
+                    value={searchFormData.searchMonth}
+                    onChange={handleFormChange}
+                    name="searchMonth"
+                  >
+                    <option value="">Select Month</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                    <option>11</option>
+                    <option>12</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <svg
+                      class="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </div>
+                </div>
               </div>
-              <div className="" >
-              <div className="mx-10 text-center font-bold">
-                <span className="text-blue-500"> Total Payable &nbsp; - </span>
-                &nbsp;
-                <span className="text-black"> Rs.{((parseFloat(totalAmount) + 59628.82 + 13138.76)*1.15)}</span>
-              </div>
-              <div className="flex justify-center justify-items-center" ref={tableRef}>
-              <table className="border-collapse mt-6 mx-auto">
-                <thead>
-                  <tr>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data?.map((row, rowIndex) => (
-                    <tr key={rowIndex}>
-                      {Object.keys(data[0])?.map(
-                        (header, colIndex) => (
-                          <td
-                            key={colIndex}
-                            className={`border border-gray-500 px-4 py-2 ${rowIndex === data.length-1 ? 'font-bold' : ''}`}
-                          >
-                            {row[header]}
-                          </td>
-                        )
-                      )}
-
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              </div>
+              <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                <label
+                  class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                  for="grid-state"
+                >
+                  Year
+                </label>
+                <div class="relative">
+                  <select
+                    class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    id="grid-state"
+                    value={searchFormData.searchYear}
+                    onChange={handleFormChange}
+                    name="searchYear"
+                  >
+                    <option value="">Select Year</option>
+                    {years.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <svg
+                      class="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-
+            <button
+              class="mt-10 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+              type="submit"
+            >
+              Get the Telecom Bill
+            </button>
+          </form>
           <div className=" mt-4">
             <form class="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4  mt-10 mx-20 border border-gray-600">
               <div class="flex -mx-3 mb-2 justify-center justify-items-center">
@@ -515,75 +525,6 @@ function TelecomBillPage() {
               </button>
             </form>
           </div>
-
-          {!userLoading && userMobileData?.length !== 0 && (
-            <div className="mx-2 flex-grow justify-center justify-items-center mb-10">
-              <div className="text-xl text-center mt-6">
-                Official Office Master Bill
-              </div>
-              <table className="border-collapse mt-6 mx-auto">
-                <thead>
-                  <tr>
-                    {Object.keys(userMobileData[0])?.map((header, index) => (
-                      <th
-                        key={index}
-                        className="border border-gray-500 px-4 py-2"
-                      >
-                        {header}
-                      </th>
-                    ))}
-                    <th className="border border-gray-500 px-4 py-2"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {userMobileData?.map((row, rowIndex) => (
-                    <tr key={rowIndex}>
-                      {Object.keys(userMobileData[0])?.map(
-                        (header, colIndex) => (
-                          <td
-                            key={colIndex}
-                            className="border border-gray-500 px-4 py-2"
-                          >
-                            {row[header]}
-                          </td>
-                        )
-                      )}
-                      <td className="border border-gray-500 px-4 py-2">
-                        <div className="flex justify-between gap-2">
-                          <button
-                            className="text-gray-600"
-                            onClick={() =>
-                              handleUserMobileEdit(
-                                row.Id,
-                                row.Mobile,
-                                row.Rent,
-                                row.Other,
-                                row.VoiceUsage,
-                                row.CallCharges,
-                                row.Dpt,
-                                row.Month,
-                                row.Year
-                              )
-                            }
-                          >
-                            <MdEdit size={20} />
-                          </button>
-                          <button
-                            className="text-red-500"
-                            onClick={() => {
-                              handleDeleteTelecomBill(row.Id);
-                            }}
-                          >
-                            <MdDelete size={20} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
         </div>
       </div>
     </>

@@ -48,6 +48,87 @@ export const telebillApi = createApi({
       invalidatesTags: ['getRequest'],
     }),
 
+    getMonthlyTelebills: builder.query({
+      query: ({ month, year }) => ({
+        url: `/telebills?month=${month}&year=${year}`,
+        method: 'GET',
+      }),
+      providesTags: ['getRequest'],
+      transformResponse: (response) => response,
+    }),
+
+    getTelebillPayable: builder.query({
+      query: ({ month, year }) => ({
+        url: `/telebill/payable?month=${month}&year=${year}`,
+        method: 'GET',
+      }),
+      providesTags: ['getRequest'],
+      transformResponse: (response) => response,
+    }),
+
+    newTelebillPayable: builder.mutation({
+      query: ({
+        year,
+        month,
+        discount,
+        teleLev,
+        cess,
+        sscl,
+        iddLevy,
+        vat,
+        total,
+      }) => {
+        return {
+          url: `/telebill/payable`,
+          method: 'POST',
+          body: {
+            year,
+            month,
+            discount,
+            teleLev,
+            cess,
+            sscl,
+            iddLevy,
+            vat,
+            total,
+          },
+        };
+      },
+      invalidatesTags: ['getRequest'],
+    }),
+
+    updateTelebillPayable: builder.mutation({
+      query: ({
+        id,
+        year,
+        month,
+        discount,
+        teleLev,
+        cess,
+        sscl,
+        iddLevy,
+        vat,
+        total,
+      }) => {
+        return {
+          url: `/telebill/payable/${id}`,
+          method: 'PUT',
+          body: {
+            year,
+            month,
+            discount,
+            teleLev,
+            cess,
+            sscl,
+            iddLevy,
+            vat,
+            total,
+          },
+        };
+      },
+      invalidatesTags: ['getRequest'],
+    }),
+
     updateTelebills: builder.mutation({
       query: ({
         id,
@@ -97,4 +178,9 @@ export const {
   useNewTelebillsMutation,
   useDeleteTelebillsMutation,
   useUpdateTelebillsMutation,
+  useGetMonthlyTelebillsQuery,
+  useGetTelebillPayableQuery,
+  useNewTelebillPayableMutation,
+  useUpdateTelebillPayableMutation,
+
 } = telebillApi;
