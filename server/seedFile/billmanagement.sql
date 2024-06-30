@@ -435,7 +435,8 @@ INSERT INTO `departments` (`ID`,`Name`,`ShortName`) VALUES
 
 CREATE TABLE telecom (
     Id INT AUTO_INCREMENT PRIMARY KEY,
-    MobileNumber INT NOT NULL
+    MobileNumber INT NOT NULL,
+    Dpt VARCHAR(100) NOT NULL
 );
 
 

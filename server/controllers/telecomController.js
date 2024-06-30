@@ -1,8 +1,8 @@
 const db = require('../config/query');
 
-exports.create = (req, res) => {  
-  const sql = 'INSERT INTO telecom (MobileNumber) VALUES (?)';
-  db.query(sql, [req.body.mobileNumber], (err, results) => {
+exports.create = (req, res) => {
+  const sql = 'INSERT INTO telecom (MobileNumber, Dpt) VALUES (?, ?)';
+  db.query(sql, [req.body.mobileNumber, req.body.dpt], (err, results) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     } else {
@@ -22,9 +22,10 @@ exports.getAll = (req, res) => {
 };
 
 exports.updateById = (req, res) => {
-  const sql = 'UPDATE telecom SET MobileNumber = ? WHERE Id = ?';
+  const sql = 'UPDATE telecom SET MobileNumber = ?, Dpt = ? WHERE Id = ?';
   db.query(sql, [
     req.body.mobileNumber,
+    req.body.dpt,
     req.params.id
   ], (err, results) => {
     if (err) {
