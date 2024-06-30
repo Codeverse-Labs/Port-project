@@ -1,6 +1,6 @@
 const db = require('../config/query');
 
-exports.create = (req, res) => {  
+exports.create = (req, res) => {
   const sql = 'INSERT INTO telebills (Mobile, Rent, Other, VoiceUsage, CallCharges, Total, Dpt, Month, Year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
   db.query(sql, [
     req.body.mobile,
@@ -65,7 +65,7 @@ exports.deleteById = (req, res) => {
 };
 
 exports.getMonthlyBills = (req, res) => {
-  const { month, year } = req.query; 
+  const { month, year } = req.query;
 
   const sql = `SELECT * FROM telebills WHERE telebills.Month = ? AND telebills.Year = ?;`;
 
@@ -75,5 +75,25 @@ exports.getMonthlyBills = (req, res) => {
     } else {
       res.status(200).json(results);
     }
+  });
+};
+
+
+exports.getDptBills = (req, res) => {
+  const { month, year, Dpt } = req.query;
+
+  const sql = `
+    SELECT b.*
+    FROM telebills b 
+    WHERE b.Month = ? AND b.Year = ? AND b.Dpt = ?;
+  `;
+
+  db.query(sql, [month, year, Dpt], (err, results) => {
+    if (err) {
+      console.error('Error fetching bill data:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    res.json(results);
   });
 };
