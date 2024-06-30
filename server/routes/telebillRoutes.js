@@ -8,6 +8,9 @@ router.post('/', telebillController.create);
 // get all 
 router.get('/', telebillController.getMonthlyBills);
 
+// Route to get all bills in the select month and year and department
+router.get('/dpt', telebillController.getDptBills);
+
 // update
 router.put('/:id', telebillController.updateById);
 
