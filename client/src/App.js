@@ -12,6 +12,8 @@ import TeleNumberPage from './pages/Telecom/TeleNumber/TeleNumberPage';
 import TelecomBillPage from './pages/Telecom/TelecomBills/TelecomBillPage';
 import DSummaryHomePage from './pages/DivisionSummary/DSummaryHomePage';
 import TelecomMonthlyBillPage from './pages/Telecom/TelecomBills/TelecomMonthlyBillPage';
+import TelecomDSummaryHomePage from './pages/Telecom/DivisionSummary/TelecomDSummaryHomePage';
+import TelecomDSummaryPage from './pages/Telecom/DivisionSummary/TelecomDSummaryPage';
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
         <Route exact path="/telecom/numbers" element={<TeleNumberPage />} />
         <Route exact path="/telecom/master-bill" element={<TelecomBillPage />} />
         <Route exact path="/telecom/master-bill-sheet" element={<TelecomMonthlyBillPage />} />
+        <Route path="/telecom/d-summary" element={<TelecomDSummaryHomePage />} />
+        <Route path="/telecom/d-summary-sheet" element={<TelecomDSummaryPage />} />
       </Routes>
     </BrowserRouter>
   );
