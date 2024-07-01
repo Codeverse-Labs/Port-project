@@ -92,21 +92,21 @@ function TelecomMonthlyBillPage() {
     if (!payableLoading) {
       setData([
         { charge: 'Rental & Call Charges', amount: totalAmount },
-        { charge: '(MIDC Discount)', amount: payableData[0].discount },
+        { charge: '(MIDC Discount)', amount: payableData[0]?.discount },
         { charge: 'Sub Total', amount: totalAmount },
-        { charge: 'Tele Leve', amount: payableData[0].teleLev },
-        { charge: 'CESS', amount: payableData[0].cess },
-        { charge: 'SSCL', amount: payableData[0].sscl },
-        { charge: 'IDD Levy', amount: payableData[0].iddLevy },
+        { charge: 'Tele Leve', amount: payableData[0]?.teleLev },
+        { charge: 'CESS', amount: payableData[0]?.cess },
+        { charge: 'SSCL', amount: payableData[0]?.sscl },
+        { charge: 'IDD Levy', amount: payableData[0]?.iddLevy },
         {
           charge: 'VAT- 15%',
           amount: (
             (totalAmount -
-              payableData[0].discount +
-              payableData[0].teleLev +
-              payableData[0].cess +
-              payableData[0].sscl +
-              payableData[0].iddLevy) *
+              payableData[0]?.discount +
+              payableData[0]?.teleLev +
+              payableData[0]?.cess +
+              payableData[0]?.sscl +
+              payableData[0]?.iddLevy) *
             0.15
           ).toFixed(2),
         },
@@ -114,11 +114,11 @@ function TelecomMonthlyBillPage() {
           charge: 'Total   Payable',
           amount: (
             (totalAmount -
-              payableData[0].discount +
-              payableData[0].teleLev +
-              payableData[0].cess +
-              payableData[0].sscl +
-              payableData[0].iddLevy) *
+              payableData[0]?.discount +
+              payableData[0]?.teleLev +
+              payableData[0]?.cess +
+              payableData[0]?.sscl +
+              payableData[0]?.iddLevy) *
             1.15
           ).toFixed(2),
         },
@@ -703,11 +703,11 @@ function TelecomMonthlyBillPage() {
                       Rs.
                       {(
                         (totalAmount -
-                          payableData[0].discount +
-                          payableData[0].teleLev +
-                          payableData[0].cess +
-                          payableData[0].sscl +
-                          payableData[0].iddLevy) *
+                          payableData[0]?.discount +
+                          payableData[0]?.teleLev +
+                          payableData[0]?.cess +
+                          payableData[0]?.sscl +
+                          payableData[0]?.iddLevy) *
                         1.15
                       ).toFixed(2)}
                     </span>

@@ -18,22 +18,22 @@ export const telecomApi = createApi({
       }),
 
       newTelecom: builder.mutation({
-        query: ({ mobileNumber }) => {
+        query: ({ mobileNumber, dpt }) => {
           return {
             url: `/telecom`,
             method: 'POST',
-            body: { mobileNumber },
+            body: { mobileNumber, dpt },
           };
         },
         invalidatesTags: ['getRequest'],
       }),
 
       updateTelecom: builder.mutation({
-        query: ({ id, mobileNumber }) => {
+        query: ({ id, mobileNumber, dpt }) => {
           return {
             url: `/telecom/${id}`,
             method: 'PUT',
-            body: { mobileNumber },
+            body: { mobileNumber, dpt },
           };
         },
         invalidatesTags: ['getRequest'],

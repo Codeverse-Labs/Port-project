@@ -43,25 +43,23 @@ function TelecomBillPage() {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const years = Array.from({ length: 10 }, (_, i) => selectedYear - i);
 
-
-
   const [formData, setFormData] = useState({
     id: '',
     mobile: '',
-    rent: null,
+    rent: 950,
     other: null,
     voiceUsage: null,
     discount: null,
     callCharges: null,
     total: null,
     dpt: '',
-    month: null,
-    year: null,
+    month: new Date().getMonth(),
+    year: new Date().getFullYear(),
   });
 
   const [searchFormData, setSearchFormData] = useState({
     searchMonth: '',
-    searchYear: ''
+    searchYear: '',
   });
 
   const handleFormChange = (e) => {
@@ -72,15 +70,20 @@ function TelecomBillPage() {
     });
   };
 
-
-
   const handleChange = (event) => {
     const { name, value } = event.target;
 
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    const selectedOptionData = telecomNumberData.find(
+      (option) => option.MobileNumber.toString() === value
+    );
+
+    if (selectedOptionData) {
+      setFormData({
+        ...formData,
+        dpt: selectedOptionData.Dpt,
+        [name]: value,
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -181,8 +184,7 @@ function TelecomBillPage() {
   };
 
   const handleFormSubmit = (e) => {
-
-    console.log(searchFormData)
+    console.log(searchFormData);
     e.preventDefault();
     const queryParams = new URLSearchParams(location.search);
     queryParams.set('month', searchFormData.searchMonth);

@@ -1,21 +1,26 @@
-
-
-
 import { React, useState } from 'react';
 import Sidebar from '../../../components/Sidebar';
 import Navbar from '../../../components/Navbar';
-import { MdEdit , MdDelete} from 'react-icons/md';
+import { MdEdit, MdDelete } from 'react-icons/md';
 import { toast } from 'react-toastify';
-import { useGetAllTelecomQuery, useNewTelecomMutation, useUpdateTelecomMutation, useDeleteTelecomMutation } from '../../../services/telecomService';
+import {
+  useGetAllTelecomQuery,
+  useNewTelecomMutation,
+  useUpdateTelecomMutation,
+  useDeleteTelecomMutation,
+} from '../../../services/telecomService';
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import { useGetAllDepartmentsQuery } from '../../../services/departmentService';
 
 function TeleNumberPage() {
   const { data: userMobileData, isLoading: userLoading } =
     useGetAllTelecomQuery();
+
+  const { data: departmentData, isLoading: departmentLoading } =
+    useGetAllDepartmentsQuery();
 
   const [newUserMobile] = useNewTelecomMutation();
   const [updateUserMobile] = useUpdateTelecomMutation();
@@ -30,10 +35,10 @@ function TeleNumberPage() {
   const [formData, setFormData] = useState({
     id: '',
     number: '',
+    department: '',
   });
 
-
-  const handleUserMobileEdit = (id, MobileNumber) => {
+  const handleUserMobileEdit = (id, MobileNumber, dpt) => {
     setIsUpdate(true);
     window.scrollTo({
       top: 0,
@@ -43,7 +48,7 @@ function TeleNumberPage() {
     setFormData({
       id: id,
       number: MobileNumber,
-
+      department: dpt
     });
   };
 
@@ -88,14 +93,16 @@ function TeleNumberPage() {
   const handleSubmit = async (e) => {
     const userMobileCreateData = {
       mobileNumber: formData.number,
+      dpt: formData.department
     };
 
     const userMobileUpdateData = {
       id: formData.id,
-      mobileNumber: formData.number
+      mobileNumber: formData.number,
+      dpt: formData.department
     };
 
-    console.log(formData)
+    console.log(formData);
 
     if (isUpdate === true) {
       const UserMobileUpdateRes = await updateUserMobile(userMobileUpdateData);
@@ -103,6 +110,7 @@ function TeleNumberPage() {
       setFormData({
         id: '',
         number: '',
+        department: ''
       });
       setIsUpdate(false);
 
@@ -117,6 +125,7 @@ function TeleNumberPage() {
       const UserMobileCreateRes = await newUserMobile(userMobileCreateData);
       setFormData({
         number: '',
+        department: ''
       });
 
       if (UserMobileCreateRes.data) {
@@ -139,8 +148,7 @@ function TeleNumberPage() {
           <Sidebar />
         </div>
         <div className="overflow-x-auto ms-16 flex-grow justify-center justify-items-center z-10">
-
-          <div className={`${removeMobile ? 'blur-sm': 'blur-none'} mt-4`}>
+          <div className={`${removeMobile ? 'blur-sm' : 'blur-none'} mt-4`}>
             <form class="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4  mt-10 mx-20 border border-gray-600">
               <div class="flex -mx-3 mb-2 justify-center justify-items-center">
                 {
@@ -168,7 +176,42 @@ function TeleNumberPage() {
                   </div>
                 }
 
-
+                <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                  <label
+                    class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                    for="grid-state"
+                  >
+                    Department
+                  </label>
+                  <div class="relative">
+                    <select
+                      class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                      id="grid-state"
+                      name="department"
+                      value={formData.department}
+                      type="text"
+                      required
+                      onChange={handleChange}
+                    >
+                      <option value="">Select Department</option>
+                      {!departmentLoading &&
+                        departmentData?.map((departments) => (
+                          <option key={departments.Id} value={departments.Name}>
+                            {departments.Name}
+                          </option>
+                        ))}
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                      <svg
+                        class="fill-current h-4 w-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
               </div>
               <button
                 class="mt-10 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
@@ -181,7 +224,11 @@ function TeleNumberPage() {
           </div>
 
           {!userLoading && userMobileData?.length !== 0 && (
-            <div className={`${removeMobile ? 'blur-sm': 'blur-none'} mx-2 flex-grow justify-center justify-items-center`}>
+            <div
+              className={`${
+                removeMobile ? 'blur-sm' : 'blur-none'
+              } mx-2 flex-grow justify-center justify-items-center`}
+            >
               <div className="text-xl text-center mt-6">Telecom Numbers</div>
               <table className="border-collapse mt-6 mx-auto">
                 <thead>
@@ -215,10 +262,7 @@ function TeleNumberPage() {
                           <button
                             className="text-gray-600"
                             onClick={() =>
-                              handleUserMobileEdit(
-                                row.Id,
-                                row.MobileNumber,
-                              )
+                              handleUserMobileEdit(row.Id, row.MobileNumber, row.Dpt)
                             }
                           >
                             <MdEdit size={20} />
@@ -240,7 +284,7 @@ function TeleNumberPage() {
             </div>
           )}
 
-{removeMobile && (
+          {removeMobile && (
             <div className="w-12/12 fixed left-96 right-24 top-52 h-auto z-50 flex justify-center justify-items-center items-center">
               <div className="shadow-lg  h-[400px]  bg-white rounded-xl px-10">
                 <div className="flex justify-end justify-items-end mt-6">
@@ -309,4 +353,3 @@ function TeleNumberPage() {
 }
 
 export default TeleNumberPage;
-
